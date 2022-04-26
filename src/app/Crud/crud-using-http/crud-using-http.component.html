@@ -1,0 +1,144 @@
+
+<div class="container-sm">
+  
+  <button class ="btn btn-primary" (click)="open(post)">Create User</button>
+  <hr>
+  <!-- USING ngb pagination -->
+  <!-- <h2>User Data</h2> -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Avatar</th>
+        <th scope="col">FullName</th>
+        <th scope="col">Email</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor = " let user of users?.data ; let i = index ">
+        <td>{{(1+i+((users.page - 1) * users.per_page))}}</td>
+        <td><img src="{{user.avatar}}" alt="" width="30px"></td>
+        <td>{{user.first_name}} {{user.last_name}}</td>
+        <td>{{user.email}}</td>
+        <td>
+          <button style="margin-right: 10px;" class="btn-outline-primary" (click)="onEdit(user.id , i) ; opene(edit)">Edit</button>
+          <button class="btn-outline-danger" (click)="onDelete(user.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="pagination justify-content-center ">
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="pno" [pageSize]="pageSize" (pageChange)="refreshPage( $event, pageSize)">
+    </ngb-pagination>
+  
+    <!-- <select  class="form-select" style="width: auto" [value]="pageSize" (ngModelChange)="refreshPage(page , pageSize)">
+      <option value="2">2 items per page</option>
+      <option value="4">4 items per page</option>
+      <option value="6">6 items per page</option>
+    </select> -->
+  </div>
+
+  <!-- for post data -->
+  <ng-template #post let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create Profile </h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup] = ' userProfileForm '>
+        <div class="mb-3">
+          <label>Name:</label>
+          <div class="input-group">
+            <input type = "text" class="form-control" name="name" formControlName ="name">
+          </div>
+          <div *ngIf = "(d.name.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.name.errors?.required" class="text-danger">*name is required</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Job:</label>
+          <div class="input-group">
+            <input type = "text" class="form-control" name="job" formControlName ="job">
+          </div>
+          <div *ngIf = "(d.job.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.job.errors?.required" class="text-danger">*job is required</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      
+      
+      <button type="button" class="btn btn-outline-success" (click)="onCreate()" >Create</button>
+      
+    </div>    
+
+  </ng-template>
+  <!-- <button type="button" class="btn btn-outline-dark" (click)= " successmsg() ">Save</button> -->
+  
+  
+  <!-- ------------------------------------------------------------------ -->
+  <ng-template #edit let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Edit Profile </h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup] = ' userUpdateForm '>
+        <!-- <div class="mb-3">
+          <label>Id:</label>
+          <div class="input-group">
+            <input [(ngModel)] ="id" type = "number" class="form-control" name="id" formControlName ="id">
+          </div>
+        </div> -->
+
+        <div class="mb-3">
+          <label>Avatar :</label>
+          <!-- <div class="input-group"> -->
+            <!-- <input [(ngModel)] ="avatar" type = "image" class="form-control" name="avatar" formControlName ="avatar"> -->
+            <div class="input-group">
+              <input [(ngModel)] ="avatar" type="file" class="form-control" id="inputGroupFile02" formControlName ="avatar">
+              <label class="input-group-text" for="inputGroupFile02">Upload</label>
+            </div>
+          <!-- </div> -->
+        </div>
+
+        <div class="mb-3">
+          <label>First Name:</label>
+          <div class="input-group">
+            <input [(ngModel)] ="firstname" type = "text" class="form-control" name="firstname" formControlName ="firstname">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Last Name:</label>
+          <div class="input-group">
+            <input [(ngModel)] ="lastname" type = "text" class="form-control" name="lastname" formControlName ="lastname">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Email :</label>
+          <div class="input-group">
+            <input [(ngModel)] ="email" type = "email" class="form-control" name="email" formControlName ="email">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      
+     <button type="button" class="btn btn-outline-success" (click)="onUpdate()" >Update</button>
+      
+    </div> 
+  </ng-template>   
+    <!-- ----------------------------------------------------------------------------------------- -->
+  <br>
+  <hr>
+  <br>
+
+</div>
+
+
