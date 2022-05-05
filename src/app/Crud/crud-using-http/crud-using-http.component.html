@@ -9,28 +9,32 @@
     <thead>
       <tr>
         <th scope="col">Id</th>
-        <th scope="col">Avatar</th>
+        <!-- <th scope="col">Avatar</th> -->
         <th scope="col">FullName</th>
         <th scope="col">Email</th>
+        <th scope="col">Gender</th>
 
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor = " let user of users?.data ; let i = index ">
-        <td>{{(1+i+((users.page - 1) * users.per_page))}}</td>
-        <td><img src="{{user.avatar}}" alt="" width="30px"></td>
-        <td>{{user.first_name}} {{user.last_name}}</td>
+      <tr *ngFor = " let user of users ; let i = index ">
+        <!-- <td>{{(1+i+((users.page - 1) * users.per_page))}}</td> -->
+        <!-- <td><img src="{{user.avatar}}" alt="" width="30px"></td> -->
+        <td>{{i+1}}</td>
+        <td>{{user.firstname}} {{user.lastname}}</td>
         <td>{{user.email}}</td>
+        <td>{{user.gender}}</td>
+
         <td>
-          <button style="margin-right: 10px;" class="btn-outline-primary" (click)="onEdit(user.id , i) ; opene(edit)">Edit</button>
-          <button class="btn-outline-danger" (click)="onDelete(user.id)">Delete</button>
+          <button style="margin-right: 10px;" class="btn-outline-primary" (click)=" opene(edit) ; onEdit(user._id , i) ">Edit</button>
+          <button class="btn-outline-danger" (click)="onDelete(user._id)">Delete</button>
         </td>
       </tr>
     </tbody>
   </table>
   
   <div class="pagination justify-content-center ">
-    <ngb-pagination [collectionSize]="collectionSize" [(page)]="pno" [pageSize]="pageSize" (pageChange)="refreshPage( $event, pageSize)">
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="pno" [pageSize]="pageSize" (pageChange)="refreshPage()">
     </ngb-pagination>
   
     <!-- <select  class="form-select" style="width: auto" [value]="pageSize" (ngModelChange)="refreshPage(page , pageSize)">
@@ -49,24 +53,55 @@
     <div class="modal-body">
       <form [formGroup] = ' userProfileForm '>
         <div class="mb-3">
-          <label>Name:</label>
+          <label>First Name:</label>
           <div class="input-group">
-            <input type = "text" class="form-control" name="name" formControlName ="name">
+            <input type = "text" class="form-control" name="firstname" formControlName ="firstname">
           </div>
-          <div *ngIf = "(d.name.touched) || (!submitValidateFlag) ">
-            <div *ngIf ="d.name.errors?.required" class="text-danger">*name is required</div>
+          <div *ngIf = "(d.firstname.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.firstname.errors?.required" class="text-danger">*firstname is required</div>
           </div>
         </div>
 
         <div class="mb-3">
-          <label>Job:</label>
+          <label>Last Name:</label>
           <div class="input-group">
-            <input type = "text" class="form-control" name="job" formControlName ="job">
+            <input type = "text" class="form-control" name="lastname" formControlName ="lastname">
           </div>
-          <div *ngIf = "(d.job.touched) || (!submitValidateFlag) ">
-            <div *ngIf ="d.job.errors?.required" class="text-danger">*job is required</div>
+          <div *ngIf = "(d.lastname.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.lastname.errors?.required" class="text-danger">*lastname is required</div>
           </div>
         </div>
+
+        <div class="mb-3">
+          <label>Email:</label>
+          <div class="input-group">
+            <input type = "text" class="form-control" name="email" formControlName ="email">
+          </div>
+          <div *ngIf = "(d.email.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.email.errors?.required" class="text-danger">*email is required</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Password:</label>
+          <div class="input-group">
+            <input type = "text" class="form-control" name="password" formControlName ="password">
+          </div>
+          <div *ngIf = "(d.password.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.password.errors?.required" class="text-danger">*password is required</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Gender:</label>
+          <div class="input-group">
+            <input type = "text" class="form-control" name="gender" formControlName ="gender">
+          </div>
+          <div *ngIf = "(d.gender.touched) || (!submitValidateFlag) ">
+            <div *ngIf ="d.gender.errors?.required" class="text-danger">*gender is required</div>
+          </div>
+        </div>
+
       </form>
     </div>
     <div class="modal-footer">
@@ -77,7 +112,7 @@
     </div>    
 
   </ng-template>
-  <!-- <button type="button" class="btn btn-outline-dark" (click)= " successmsg() ">Save</button> -->
+  <!-- <button type="button" class="btn btn-outline-dark" (click)= "onCreate()">Save</button> -->
   
   
   <!-- ------------------------------------------------------------------ -->
@@ -95,16 +130,16 @@
           </div>
         </div> -->
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label>Avatar :</label>
-          <!-- <div class="input-group"> -->
+          <div class="input-group"> 
             <!-- <input [(ngModel)] ="avatar" type = "image" class="form-control" name="avatar" formControlName ="avatar"> -->
-            <div class="input-group">
+            <!-- <div class="input-group">
               <input [(ngModel)] ="avatar" type="file" class="form-control" id="inputGroupFile02" formControlName ="avatar">
               <label class="input-group-text" for="inputGroupFile02">Upload</label>
             </div>
-          <!-- </div> -->
-        </div>
+           </div> 
+        </div>  -->
 
         <div class="mb-3">
           <label>First Name:</label>
@@ -124,6 +159,20 @@
           <label>Email :</label>
           <div class="input-group">
             <input [(ngModel)] ="email" type = "email" class="form-control" name="email" formControlName ="email">
+          </div>
+        </div>
+
+        <!-- <div class="mb-3">
+          <label>Password :</label>
+          <div class="input-group">
+            <input [(ngModel)] ="password" type = "text" class="form-control" name="password" formControlName ="password">
+          </div>
+        </div> -->
+
+        <div class="mb-3">
+          <label>Gender :</label>
+          <div class="input-group">
+            <input [(ngModel)] ="gender" type = "text" class="form-control" name="gender" formControlName ="gender">
           </div>
         </div>
       </form>

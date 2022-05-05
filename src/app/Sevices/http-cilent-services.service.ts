@@ -11,18 +11,21 @@ export class HttpCilentServicesService {
   
   
  
-getDataUrl = environment.baseurl+'api/users?page=' ;
+getDataUrl = environment.baseurl+'api/users' ;
 deleteDataUrl = environment.baseurl+'api/users/';
 postDataUrl =  environment.baseurl+'api/users'
-updateDataUrl = environment.baseurl+'api/users'
+updateDataUrl = environment.baseurl+'api/users/'
 
 
   constructor(private _http: HttpClient) { }
 
-  getData(pageNo: any){
+  getData(){
 
-    return this._http.get(this.getDataUrl+pageNo).pipe(map(data => {
+    return this._http.get(this.getDataUrl).pipe(map(data => {
+      console.log(data);
+      
       return data;
+
     }));
   }
   
@@ -33,14 +36,14 @@ updateDataUrl = environment.baseurl+'api/users'
     }));;
   }
 
-  postData(name , job){
+  postData(firstname , lastname , email , password , gender){
     //console.log("data Submitted..")
-    return this._http.post(this.postDataUrl ,{'name': name , 'job':job });
+    return this._http.post(this.postDataUrl ,{'firstname': firstname, 'lastname': lastname , 'email':email , 'password': password , 'gender': gender });
   }
 
   updateData(id , user){
-    //console.log("in service",user.avatar)
-    return this._http.put(this.updateDataUrl+id , {'avatar': user.avatar.value , 'first_name': user.firstname.value , 'last_name': user.lastname.value , 'email':user.email.value}).pipe(map(data => {
+    console.log("in service",user.firstname)
+    return this._http.put(this.updateDataUrl+id , { 'firstname': user.firstname.value , 'lastname': user.lastname.value , 'email':user.email.value , 'password':user.password.value , 'gender': user.gender.value}).pipe(map(data => {
       //console.log(data)
       return data;
     }));;

@@ -27,6 +27,8 @@ export class CrudUsingHttpComponent implements OnInit {
   email;
   firstname;
   lastname;
+  gender;
+  password;
   avatar;
   deletedata;
   index;
@@ -44,17 +46,21 @@ export class CrudUsingHttpComponent implements OnInit {
     ) {
 
       this.userProfileForm = this.formBuilder.group({
-        name : ['' , Validators.required],
-        job : ['' , Validators.required],
+        firstname : ['' , Validators.required],
+        lastname : ['' , Validators.required],
+        email : ['' , Validators.required],
+        password : ['' , Validators.required],
+        gender : ['' , Validators.required],
       });
 
       this.userUpdateForm = this.formBuilder.group({
         id : ['' , Validators.required],
-        avatar : ['' , Validators.required],
-        email: ['' , Validators.required],
+        //avatar : ['' , Validators.required],
         firstname : ['' , Validators.required],
         lastname : ['' , Validators.required],
-
+        email: ['' , Validators.required],
+        password : ['' , Validators.required],
+        gender : ['' , Validators.required],
       });
     
    }
@@ -64,7 +70,7 @@ export class CrudUsingHttpComponent implements OnInit {
     //this.pno = 1
   // ngb pagination
     this.pageSize =6;
-    this.refreshPage(this.pno , this.pageSize);
+    this.refreshPage();
 
     this.activetedRoute.queryParams.subscribe(params => {
      
@@ -79,13 +85,15 @@ export class CrudUsingHttpComponent implements OnInit {
   }
   
   // FOR ngb pagination
-  refreshPage(pno:any , pageSize:any) {
+  refreshPage() {
   
     //console.log(this.pno)
-    this._httpCilentServicesService.getData(pno).subscribe((data:any) => {
+    this._httpCilentServicesService.getData().subscribe((data:any) => {
       this.users = data;
+      console.log(this.users);
+      
       this.collectionSize = this.users.total;
-      this.router.navigate([''] ,{ queryParams: { page: pno }})
+      //this.router.navigate([''] ,{ queryParams: { page: pno }})
     })
   }
 
@@ -100,13 +108,13 @@ export class CrudUsingHttpComponent implements OnInit {
       console.log("submit");
       console.log("created....")
       console.log(this.d)
-      console.log(this.d['name'].value);
-      console.log(this.d['job'].value);
-      this._httpCilentServicesService.postData(this.d.name.value , this.d.job.value).subscribe((data:any) => {
+      //console.log(this.d['name'].value);
+      //console.log(this.d['job'].value);
+      this._httpCilentServicesService.postData(this.d.firstname.value , this.d.lastname.value , this.d.email.value , this.d.password.value , this.d.gender.value).subscribe((data:any) => {
         this.postdata = data;
         console.log(this.postdata)
+        this.refreshPage()
       });
-
       this.userProfileForm.reset();
       
       
@@ -114,11 +122,11 @@ export class CrudUsingHttpComponent implements OnInit {
     else{
       console.log("field empty");
       this.submitValidateFlag = false;
-      if(this.d.name.value == ''){
-        this.errorsmsg("name")
-      }else{
-        this.errorsmsg('job')
-      }
+      // if(this.d.name.value == ''){
+      //   this.errorsmsg("name")
+      // }else{
+      //   this.errorsmsg('job')
+      // }
       
     }
    
@@ -150,10 +158,13 @@ export class CrudUsingHttpComponent implements OnInit {
     this.index = i;
   
     //this.avatar.setProperty(this.users.data[i].avatar);
-    console.log(this.avatar);
-    this.firstname = this.users.data[i].first_name;
-    this.lastname = this.users.data[i].last_name;
-    this.email = this.users.data[i].email;
+    console.log(this.users);
+    this.firstname = this.users[i].firstname;
+    this.lastname = this.users[i].lastname;
+    this.email = this.users[i].email;
+    this.password = this.users[i].password;
+    this.gender = this.users[i].gender;
+    
     //this.avatar = this.avatar.setValue(this.users.data[i].avatar)
 
     
@@ -173,7 +184,7 @@ export class CrudUsingHttpComponent implements OnInit {
       this.users = data;
       console.log( 'in update',this.users)
       this.successmsg("user updated")    
-      this.refreshPage(2, this.pageSize); 
+      this.refreshPage(); 
     });
   }
 
@@ -190,7 +201,9 @@ export class CrudUsingHttpComponent implements OnInit {
   onDelete(id:any){
     this._httpCilentServicesService.deleteData(id).subscribe((data:any) => {
       this.successmsg("user deleted")    
-      this.refreshPage(2, this.pageSize); 
+      this.refreshPage();
+      // this.refreshPage(2, this.pageSize); 
+
       
     });
     
