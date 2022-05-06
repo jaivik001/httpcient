@@ -19,9 +19,9 @@ updateDataUrl = environment.baseurl+'api/users/'
 
   constructor(private _http: HttpClient) { }
 
-  getData(){
+  getData(isPagination, pageNo, pageSize){
 
-    return this._http.get(this.getDataUrl).pipe(map(data => {
+    return this._http.get(this.getDataUrl + '?isPagination=' + isPagination + '&page_no=' + pageNo + '&pageSize=' + pageSize).pipe(map(data => {
       console.log(data);
       
       return data;

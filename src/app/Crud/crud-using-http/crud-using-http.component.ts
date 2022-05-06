@@ -59,7 +59,6 @@ export class CrudUsingHttpComponent implements OnInit {
         firstname : ['' , Validators.required],
         lastname : ['' , Validators.required],
         email: ['' , Validators.required],
-        password : ['' , Validators.required],
         gender : ['' , Validators.required],
       });
     
@@ -67,15 +66,14 @@ export class CrudUsingHttpComponent implements OnInit {
 
   ngOnInit() { 
 
-    //this.pno = 1
+    this.pno = 1
   // ngb pagination
-    this.pageSize =6;
+    this.pageSize = 10;
     this.refreshPage();
 
-    this.activetedRoute.queryParams.subscribe(params => {
-     
-      this.pno = params['page'];
-      
+    this.activetedRoute.queryParamMap.subscribe(params => {
+      this.pno = params.get('page');
+      this.refreshPage();
     });
   }
     
@@ -88,13 +86,18 @@ export class CrudUsingHttpComponent implements OnInit {
   refreshPage() {
   
     //console.log(this.pno)
-    this._httpCilentServicesService.getData().subscribe((data:any) => {
-      this.users = data;
+    this._httpCilentServicesService.getData(1, this.pno, this.pageSize).subscribe((data:any) => {
+      this.users = data.data;
       console.log(this.users);
       
-      this.collectionSize = this.users.total;
+      this.collectionSize = data.total;
+      
       //this.router.navigate([''] ,{ queryParams: { page: pno }})
     })
+  }
+
+  paginationChange(event) {
+    this.router.navigate([''], {queryParams: {'page': event}});
   }
 
   onCreate(){
@@ -104,13 +107,13 @@ export class CrudUsingHttpComponent implements OnInit {
       this.modalReference.close();
       
       this.submitValidateFlag = true
-      this.successmsg("user created")
       console.log("submit");
       console.log("created....")
       console.log(this.d)
       //console.log(this.d['name'].value);
       //console.log(this.d['job'].value);
       this._httpCilentServicesService.postData(this.d.firstname.value , this.d.lastname.value , this.d.email.value , this.d.password.value , this.d.gender.value).subscribe((data:any) => {
+        this.successmsg("user created")
         this.postdata = data;
         console.log(this.postdata)
         this.refreshPage()
@@ -177,15 +180,18 @@ export class CrudUsingHttpComponent implements OnInit {
   onUpdate(){
     //console.log(this.userUpdateForm.controls)
     //console.log()
-    this.modalReference1.close();
-    debugger;
-    this._httpCilentServicesService.updateData(this.id ,this.userUpdateData ).subscribe((data:any) => {
+    this.userUpdateForm.patchValue({id: this.id});
+    if(this.userUpdateForm.valid){
+      this.modalReference1.close();
       debugger;
-      this.users = data;
-      console.log( 'in update',this.users)
-      this.successmsg("user updated")    
-      this.refreshPage(); 
-    });
+      this._httpCilentServicesService.updateData(this.id ,this.userUpdateData ).subscribe((data:any) => {
+        debugger;
+        this.users = data;
+        console.log( 'in update',this.users)
+        this.successmsg("user updated")    
+        this.refreshPage(); 
+      });
+    }
   }
 
   opene(edit) {
